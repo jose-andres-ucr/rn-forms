@@ -1,7 +1,7 @@
 {
   "name": "rn-forms",
   "version": "1.0.0",
-  "main": "node_modules/expo/AppEntry.js",
+  "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
@@ -9,10 +9,15 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.3.4",
     "expo": "~50.0.14",
+    "expo-router": "^3.4.8",
     "expo-status-bar": "~1.11.1",
     "react": "18.2.0",
-    "react-native": "0.73.6"
+    "react-hook-form": "^7.51.2",
+    "react-native": "0.73.6",
+    "react-native-paper": "^5.12.3",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
