@@ -5,6 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "expo-router";
+import { router } from "expo-router";
 
 const FormData = z
   .object({
@@ -36,7 +37,7 @@ export default function Page() {
     control,
     handleSubmit,
     trigger,
-    formState: { errors, isValid },
+    formState: { errors },
   } = useForm({
     defaultValues: {
       password: "",
@@ -47,7 +48,7 @@ export default function Page() {
 
   const onSubmit = (data: FormData) => {
     console.log(data);
-    alert(`Form was submitted. Check the logs for the data.`);
+    router.replace("/success");
   };
 
   const handleOnChangeText = (
@@ -92,6 +93,7 @@ export default function Page() {
           <TextInput
             mode={"outlined"}
             label={"Password"}
+            secureTextEntry
             style={styles.inputField}
             onBlur={onBlur}
             onChangeText={(value: string) =>
@@ -99,7 +101,6 @@ export default function Page() {
             }
             value={value}
             error={errors.email ? true : false}
-            keyboardType={"visible-password"}
             autoCapitalize="none"
             autoComplete="email"
           />
