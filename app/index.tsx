@@ -14,6 +14,7 @@ const form = z.object({
     .min(5, { message: "Password must contain at least 5 characters" })
     .max(16, { message: "Password contain at most 16 characters" }),
   email: z.string().email(),
+  fullName: z.string().min(1).max(50),
 });
 type FormData = z.infer<typeof form>;
 
@@ -26,11 +27,15 @@ export default function Page() {
     defaultValues: {
       pass: "",
       email: "",
+      fullName: "",
     },
     resolver: zodResolver(form),
   });
 
-  const refs = { passRef: useRef<TextInputRn>(null) };
+  const refs = {
+    passRef: useRef<TextInputRn>(null),
+    fullNameRef: useRef<TextInputRn>(null),
+  } as const;
 
   const onSubmit = (data: FormData) => {
     console.log(data);
@@ -83,11 +88,37 @@ export default function Page() {
             error={!errors.pass}
             autoCapitalize="none"
             autoComplete="password"
+            returnKeyType="next"
+            onSubmitEditing={() => {
+              refs.fullNameRef.current?.focus();
+            }}
+            blurOnSubmit={false}
           />
         )}
         name="pass"
       />
       {errors.pass && <Text style={styles.error}>{errors.pass.message}</Text>}
+
+      <Controller
+        control={control}
+        render={({ field: { onChange, onBlur, value } }) => (
+          <TextInput
+            ref={refs.fullNameRef}
+            mode="outlined"
+            label="Full Name"
+            style={styles.inputField}
+            onBlur={onBlur}
+            onChangeText={onChange}
+            value={value}
+            error={!errors.fullName}
+            autoCapitalize="words"
+          />
+        )}
+        name="fullName"
+      />
+      {errors.fullName ? (
+        <Text style={styles.error}>{errors.fullName.message}</Text>
+      ) : null}
 
       <Button
         style={styles.button}
