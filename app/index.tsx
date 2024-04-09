@@ -1,4 +1,4 @@
-import { StyleSheet, View, Alert } from "react-native";
+import { StyleSheet, View, TextInput as TextInputRn } from "react-native";
 
 import { TextInput, Button, Text } from "react-native-paper";
 import { useForm, Controller } from "react-hook-form";
@@ -6,6 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "expo-router";
 import { router } from "expo-router";
+import { useRef } from "react";
 
 const FormData = z.object({
   pass: z
@@ -29,6 +30,8 @@ export default function Page() {
     resolver: zodResolver(FormData),
   });
 
+  const passRef = useRef<TextInputRn>(null);
+
   const onSubmit = (data: FormData) => {
     console.log(data);
     router.push("/success");
@@ -37,7 +40,6 @@ export default function Page() {
   return (
     <View style={styles.container}>
       <Text style={[styles.title, styles.text]}>Welcome stranger</Text>
-
       <Controller
         control={control}
         render={({ field: { onChange, onBlur, value } }) => (
@@ -52,6 +54,12 @@ export default function Page() {
             keyboardType="email-address"
             autoCapitalize="none"
             autoComplete="email"
+            autoFocus
+            returnKeyType="next"
+            onSubmitEditing={() => {
+              passRef.current?.focus();
+            }}
+            blurOnSubmit={false}
           />
         )}
         name="email"
@@ -64,6 +72,7 @@ export default function Page() {
         control={control}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
+            ref={passRef}
             mode="outlined"
             label="Password"
             secureTextEntry
