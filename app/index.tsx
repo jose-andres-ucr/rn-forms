@@ -8,14 +8,14 @@ import { Link } from "expo-router";
 import { router } from "expo-router";
 import { useRef } from "react";
 
-const FormData = z.object({
+const form = z.object({
   pass: z
     .string()
     .min(5, { message: "Password must contain at least 5 characters" })
     .max(16, { message: "Password contain at most 16 characters" }),
   email: z.string().email(),
 });
-type FormData = z.infer<typeof FormData>;
+type FormData = z.infer<typeof form>;
 
 export default function Page() {
   const {
@@ -27,10 +27,10 @@ export default function Page() {
       pass: "",
       email: "",
     },
-    resolver: zodResolver(FormData),
+    resolver: zodResolver(form),
   });
 
-  const passRef = useRef<TextInputRn>(null);
+  const refs = { passRef: useRef<TextInputRn>(null) };
 
   const onSubmit = (data: FormData) => {
     console.log(data);
@@ -57,7 +57,7 @@ export default function Page() {
             autoFocus
             returnKeyType="next"
             onSubmitEditing={() => {
-              passRef.current?.focus();
+              refs.passRef.current?.focus();
             }}
             blurOnSubmit={false}
           />
@@ -72,7 +72,7 @@ export default function Page() {
         control={control}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
-            ref={passRef}
+            ref={refs.passRef}
             mode="outlined"
             label="Password"
             secureTextEntry
