@@ -7,40 +7,23 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "expo-router";
 import { router } from "expo-router";
 
-const FormData = z
-  .object({
-    password: z
-      .string()
-      .min(5, { message: "Password must contain at least 5 characters" })
-      .max(16, { message: "Password contain at most 16 characters" }),
-    email: z.string().email(),
-  })
-  .superRefine((values, ctx) => {
-    if (!values.password && !values.email) {
-      ctx.addIssue({
-        message: "Either password or email should be filled in.",
-        code: z.ZodIssueCode.custom,
-        path: ["password"],
-      });
-      ctx.addIssue({
-        message: "Either password or email should be filled in.",
-        code: z.ZodIssueCode.custom,
-        path: ["email"],
-      });
-    }
-  });
-
+const FormData = z.object({
+  pass: z
+    .string()
+    .min(5, { message: "Password must contain at least 5 characters" })
+    .max(16, { message: "Password contain at most 16 characters" }),
+  email: z.string().email(),
+});
 type FormData = z.infer<typeof FormData>;
 
 export default function Page() {
   const {
     control,
     handleSubmit,
-    trigger,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      password: "",
+      pass: "",
       email: "",
     },
     resolver: zodResolver(FormData),
@@ -48,15 +31,7 @@ export default function Page() {
 
   const onSubmit = (data: FormData) => {
     console.log(data);
-    router.replace("/success");
-  };
-
-  const handleOnChangeText = (
-    value: string,
-    onChange: (...event: string[]) => void
-  ) => {
-    onChange(value);
-    trigger();
+    router.push("/success");
   };
 
   return (
@@ -67,16 +42,14 @@ export default function Page() {
         control={control}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
-            mode={"outlined"}
-            label={"Email"}
+            mode="outlined"
+            label="Email"
             style={styles.inputField}
             onBlur={onBlur}
-            onChangeText={(value: string) =>
-              handleOnChangeText(value, onChange)
-            }
+            onChangeText={onChange}
             value={value}
-            error={errors.email ? true : false}
-            keyboardType={"email-address"}
+            error={!errors.email}
+            keyboardType="email-address"
             autoCapitalize="none"
             autoComplete="email"
           />
@@ -91,25 +64,21 @@ export default function Page() {
         control={control}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput
-            mode={"outlined"}
-            label={"Password"}
+            mode="outlined"
+            label="Password"
             secureTextEntry
             style={styles.inputField}
             onBlur={onBlur}
-            onChangeText={(value: string) =>
-              handleOnChangeText(value, onChange)
-            }
+            onChangeText={onChange}
             value={value}
-            error={errors.email ? true : false}
+            error={!errors.pass}
             autoCapitalize="none"
-            autoComplete="email"
+            autoComplete="password"
           />
         )}
-        name="password"
+        name="pass"
       />
-      {errors.password ? (
-        <Text style={styles.error}>{errors.password.message}</Text>
-      ) : null}
+      {errors.pass && <Text style={styles.error}>{errors.pass.message}</Text>}
 
       <Button
         style={styles.button}
