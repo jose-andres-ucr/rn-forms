@@ -6,7 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "expo-router";
 import { router } from "expo-router";
-import { useRef } from "react";
+import React from "react";
 
 const form = z.object({
   pass: z
@@ -33,8 +33,8 @@ export default function Page() {
   });
 
   const refs = {
-    passRef: useRef<TextInputRn>(null),
-    fullNameRef: useRef<TextInputRn>(null),
+    passRef: React.useRef<TextInputRn>(null),
+    fullNameRef: React.useRef<TextInputRn>(null),
   } as const;
 
   const onSubmit = (data: FormData) => {
