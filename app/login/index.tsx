@@ -135,7 +135,7 @@ export default function Page() {
                 onChangeText={onChange}
                 value={value === 0 ? "" : value.toString()}
                 error={!errors.mfa}
-                autoCapitalize="words"
+                keyboardType="numeric"
               />
             )}
             name="mfa"
